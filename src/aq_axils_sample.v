@@ -212,8 +212,8 @@ module aq_axils_sample
             begin
               reg_data3[31:0] <= local_wdata[31:0];
             end
-          default: 
-            begin 
+          default:
+            begin
             end
         endcase
       end
@@ -238,6 +238,8 @@ module aq_axils_sample
       end
     end
   end
+
+  assign local_rdata[31:0] = reg_rdata[31:0];
 
   assign LOCAL_REG0[31:0] = reg_data0[31:0];
   assign LOCAL_REG1[31:0] = reg_data1[31:0];
