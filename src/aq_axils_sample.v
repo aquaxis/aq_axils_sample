@@ -163,26 +163,27 @@ module aq_axils_sample
   assign S_AXI_RDATA    = ( state == S_READ )?local_rdata:32'd0;
 
   // Local Interface
-  assign local_cs       = (( state == S_WRITE2 )?1'b1:1'b0) | (( state == S_READ )?1'b1:1'b0) | 1'b0;
-  assign local_rnw      = reg_rnw;
-  assign local_addr     = reg_addr;
-  assign local_be       = reg_be;
-  assign local_wdata    = reg_wdata;
-
-  // Local Controller
-  localparam A_REG0     = 8'h00;
-  localparam A_REG1     = 8'h04;
-  localparam A_REG2     = 8'h08;
-  localparam A_REG3     = 8'h0C;
-
   wire          wr_ena, rd_ena, wr_ack;
   reg           rd_ack;
   reg [31:0]    reg_rdata;
 
-  assign wr_ena     = (local_cs & ~local_rnw)?1'b1:1'b0;
-  assign rd_ena     = (local_cs &  local_rnw)?1'b1:1'b0;
-  assign wr_ack     = wr_ena;
-  assign local_ack  = wr_ack | rd_ack;
+  assign local_cs           = (( state == S_WRITE2 )?1'b1:1'b0) | (( state == S_READ )?1'b1:1'b0) | 1'b0;
+  assign local_rnw          = reg_rnw;
+  assign local_addr[31:0]   = reg_addr[31:0];
+  assign local_be[3:0]      = reg_be[3:0];
+  assign local_wdata[31:0]  = reg_wdata[31:0];
+  assign local_ack          = wr_ack | rd_ack;
+  assign local_rdata[31:0]  = reg_rdata[31:0];
+
+  assign wr_ena = (local_cs & ~local_rnw)?1'b1:1'b0;
+  assign rd_ena = (local_cs &  local_rnw)?1'b1:1'b0;
+  assign wr_ack = wr_ena;
+
+  // Local Register
+  localparam A_REG0 = 8'h00;
+  localparam A_REG1 = 8'h04;
+  localparam A_REG2 = 8'h08;
+  localparam A_REG3 = 8'h0C;
 
   reg [31:0]    reg_data0, reg_data1, reg_data2, reg_data3;
 
@@ -239,8 +240,7 @@ module aq_axils_sample
     end
   end
 
-  assign local_rdata[31:0] = reg_rdata[31:0];
-
+  // Output signal
   assign LOCAL_REG0[31:0] = reg_data0[31:0];
   assign LOCAL_REG1[31:0] = reg_data1[31:0];
   assign LOCAL_REG2[31:0] = reg_data2[31:0];
